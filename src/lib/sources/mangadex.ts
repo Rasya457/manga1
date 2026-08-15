@@ -366,7 +366,8 @@ export async function getChapterPages(chapterId: string): Promise<string[]> {
     const qualityMode = hasDataSaver ? "data-saver" : "data";
 
     const pages = filenames.map(
-      (fileName: string) => `${baseUrl}/${qualityMode}/${chapter.hash}/${fileName}`
+      (fileName: string) =>
+        `/api/proxy/image?url=${encodeURIComponent(`${baseUrl}/${qualityMode}/${chapter.hash}/${fileName}`)}`
     );
 
     return pages;
