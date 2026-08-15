@@ -339,16 +339,16 @@ export async function getChapterPages(chapterId: string): Promise<string[]> {
     ];
   }
 
-  const cacheKey = `chapter_pages_${chapterId}`;
-  const cached = memoryCache.get<string[]>(cacheKey);
-  if (cached && cached.length > 0) {
-    return cached;
-  }
-
+  // Note: deliberately NOT using memoryCache here. The `baseUrl` returned by
+  // /at-home/server carries a short-lived access token (MangaDex says it's
+  // only valid for a limited window per reading session) — caching it for
+  // minutes/hours means every subsequent page load reuses an expired token
+  // and every <img> silently fails once it does. This endpoint is cheap
+  // enough to call fresh on every chapter open.
   try {
     const res = await fetch(`${BASE_URL}/at-home/server/${chapterId}`, {
       headers: FETCH_HEADERS,
-      next: { revalidate: 3600 },
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -368,10 +368,6 @@ export async function getChapterPages(chapterId: string): Promise<string[]> {
     const pages = filenames.map(
       (fileName: string) => `${baseUrl}/${qualityMode}/${chapter.hash}/${fileName}`
     );
-
-    if (pages.length > 0) {
-      memoryCache.set(cacheKey, pages, 600000);
-    }
 
     return pages;
   } catch (err) {

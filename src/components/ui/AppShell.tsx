@@ -84,7 +84,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     >
       <AuthGuard>
         <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-28">
-          {children}
+          <div key={pathname} className="page-enter-animation w-full">
+            {children}
+          </div>
         </main>
         <Navbar />
       </AuthGuard>

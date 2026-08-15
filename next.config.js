@@ -49,6 +49,20 @@ const nextConfig = {
           },
         ],
       },
+      // ─── Chapter pages carry a short-lived MangaDex At-Home access token —
+      // never let Vercel's edge/CDN cache this response, or every browser
+      // downstream keeps getting handed page image URLs whose token already
+      // expired. This is more specific than the rule above and is listed
+      // after it, so it wins for this path. ────────────────────────────────
+      {
+        source: "/api/mangadex/chapter/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store",
+          },
+        ],
+      },
 
       // ─── Security Headers (applies to all routes) ───────────────────────────
       {
