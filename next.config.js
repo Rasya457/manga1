@@ -64,24 +64,26 @@ const nextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains",
           },
-          // Content Security Policy — only allow resources from trusted origins
+          // Content Security Policy — configured to allow MangaDex, Firebase, and Google Sign-In
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // Scripts: self + Next.js inline scripts (needed for RSC/hydration)
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              // Styles: self + inline (Tailwind/styled-jsx inject inline styles)
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // Scripts: self + Next.js + Google Sign-In APIs
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.gstatic.com",
+              // Styles: self + inline + Google Fonts
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
               // Fonts
-              "font-src 'self' https://fonts.gstatic.com",
-              // Images: self + MangaDex CDN + data URIs (for Next/Image placeholders)
-              "img-src 'self' data: blob: https://uploads.mangadex.org https://*.mangadex.network",
-              // API/fetch calls: self only (our own Next.js API routes forward to MangaDex)
-              "connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://www.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              // Images: self + MangaDex CDN + Google user profile pictures + data URIs
+              "img-src 'self' data: blob: https://uploads.mangadex.org https://*.mangadex.network https://*.googleusercontent.com https://lh3.googleusercontent.com",
+              // API/fetch calls: self + Firebase Auth & Firestore + Google OAuth
+              "connect-src 'self' https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://accounts.google.com",
+              // Frames needed for Firebase Auth & Google Sign-In popups
+              "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com",
               // No plugins (PDF, Flash, etc.)
               "object-src 'none'",
-              // Disallow embedding this page in iframes
+              // Disallow embedding this page in external iframes
               "frame-ancestors 'none'",
               // Only load resources from HTTPS
               "upgrade-insecure-requests",
