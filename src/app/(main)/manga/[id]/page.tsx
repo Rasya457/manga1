@@ -121,6 +121,7 @@ export default function MangaDetailPage({
           priority
           className="object-cover filter blur-md brightness-[0.7] scale-110"
           unoptimized
+          referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
@@ -132,6 +133,7 @@ export default function MangaDetailPage({
               fill
               className="object-cover"
               unoptimized
+              referrerPolicy="no-referrer"
             />
           </div>
 

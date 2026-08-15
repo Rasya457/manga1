@@ -48,10 +48,10 @@ const nextConfig = {
             key: "X-XSS-Protection",
             value: "1; mode=block",
           },
-          // Don't send the full Referer header to external sites
+          // Prevent third-party image CDNs (like MangaDex) from blocking covers due to hotlinking
           {
             key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
+            value: "no-referrer",
           },
           // Restrict browser features not needed by this app
           {

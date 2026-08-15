@@ -65,6 +65,7 @@ function MangaPageItem({
         loading={isEager ? "eager" : "lazy"}
         decoding={isEager ? "sync" : "async"}
         fetchPriority={isEager ? "high" : "low"}
+        referrerPolicy="no-referrer"
         onLoad={onLoad}
         className="w-full h-auto max-w-full object-contain block"
       />

@@ -8,6 +8,7 @@ import SWRProviderWrapper from "@/components/providers/SWRProviderWrapper";
 export const metadata: Metadata = {
   title: "Manga Verse — iOS Minimalist Manga App",
   description: "Read Manga, Manhwa, Manhua and Novels with iOS minimalist aesthetics",
+  referrer: "no-referrer",
 };
 
 export default function RootLayout({
@@ -17,6 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <meta name="referrer" content="no-referrer" />
+      </head>
       <body className="min-h-screen antialiased pb-24 md:pb-28">
         <SWRProviderWrapper>
           <AuthProvider>

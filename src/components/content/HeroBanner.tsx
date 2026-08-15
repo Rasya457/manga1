@@ -46,6 +46,7 @@ export default function HeroBanner({ items }: HeroBannerProps) {
             sizes="(max-width: 1280px) 100vw, 1280px"
             className="object-cover object-top filter brightness-[0.85] scale-105 transition-transform duration-10000 group-hover:scale-110"
             unoptimized
+            referrerPolicy="no-referrer"
           />
           {/* Gradient Overlays for Readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
