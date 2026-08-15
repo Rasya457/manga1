@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import AppShell from "@/components/ui/AppShell";
 import SWRProviderWrapper from "@/components/providers/SWRProviderWrapper";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Manga Verse — iOS Minimalist Manga App",
@@ -26,6 +27,7 @@ export default function RootLayout({
           <AuthProvider>
             <ThemeProvider>
               <AppShell>{children}</AppShell>
+              <SpeedInsights />
             </ThemeProvider>
           </AuthProvider>
         </SWRProviderWrapper>

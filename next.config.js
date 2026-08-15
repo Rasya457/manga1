@@ -17,6 +17,16 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24, // 24 hours
   },
 
+  // Tree-shake and optimize heavy packages to eliminate unused JavaScript
+  experimental: {
+    optimizePackageImports: [
+      "firebase/app",
+      "firebase/auth",
+      "firebase/firestore",
+      "@vercel/speed-insights",
+    ],
+  },
+
   async headers() {
     return [
       // ─── Cache Static Assets ────────────────────────────────────────────────
@@ -26,6 +36,16 @@ const nextConfig = {
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // ─── Cache MangaDex API Responses ───────────────────────────────────────
+      {
+        source: "/api/mangadex/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=300, stale-while-revalidate=60",
           },
         ],
       },
@@ -75,8 +95,8 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
               // Fonts
               "font-src 'self' https://fonts.gstatic.com data:",
-              // Images: self + MangaDex CDN + Google user profile pictures + data URIs
-              "img-src 'self' data: blob: https://uploads.mangadex.org https://*.mangadex.network https://*.googleusercontent.com https://lh3.googleusercontent.com",
+              // Images: allow all HTTPS images (MangaDex At-Home nodes with custom ports, covers, avatars, etc.)
+              "img-src 'self' data: blob: https: http:",
               // API/fetch calls: self + Firebase Auth & Firestore + Google OAuth
               "connect-src 'self' https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://accounts.google.com",
               // Frames needed for Firebase Auth & Google Sign-In popups
