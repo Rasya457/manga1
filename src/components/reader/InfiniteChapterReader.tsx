@@ -53,21 +53,73 @@ function MangaPageItem({
   index: number;
   onLoad?: () => void;
 }) {
-  // First 8 pages load eagerly and render immediately without fade
-  const isEager = index < 8;
+  const [loaded, setLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const handleLoad = () => {
+    setLoaded(true);
+    setHasError(false);
+    if (onLoad) onLoad();
+  };
+
+  const handleError = () => {
+    // If it's the first failure, try auto-retrying once after a brief 500ms pause
+    if (retryCount === 0) {
+      setTimeout(() => {
+        setRetryCount(1);
+      }, 500);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  const handleManualRetry = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setHasError(false);
+    setRetryCount((prev) => prev + 1);
+  };
+
+  const imageSrc = retryCount > 0 ? `${url}${url.includes("?") ? "&" : "?"}_r=${retryCount}` : url;
 
   return (
-    <div className="manga-page-item relative w-full flex flex-col items-center justify-center bg-zinc-950 overflow-hidden">
+    <div className="manga-page-item relative w-full flex flex-col items-center justify-center bg-zinc-950 overflow-hidden min-h-[380px] sm:min-h-[540px]">
+      {/* Loading Skeleton */}
+      {!loaded && !hasError && (
+        <div className="absolute inset-0 bg-zinc-900/80 flex flex-col items-center justify-center text-zinc-500 gap-2 z-10">
+          <div className="w-8 h-8 border-2 border-zinc-700 border-t-white rounded-full animate-spin" />
+          <span className="text-xs font-semibold text-zinc-400">Memuat Halaman {index + 1}...</span>
+        </div>
+      )}
+
+      {/* Error Fallback with Retry Button */}
+      {hasError && (
+        <div className="py-16 px-6 flex flex-col items-center justify-center text-center gap-3 bg-zinc-900/90 rounded-2xl my-4 border border-zinc-800 max-w-sm z-10">
+          <p className="text-xs font-bold text-zinc-300">Gagal memuat Halaman {index + 1}</p>
+          <button
+            type="button"
+            onClick={handleManualRetry}
+            className="px-5 py-2 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+          >
+            🔄 Muat Ulang Halaman
+          </button>
+        </div>
+      )}
+
+      {/* Actual Manga Page Image */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={url}
+        key={`${url}-${retryCount}`}
+        src={imageSrc}
         alt={`Page ${index + 1}`}
-        loading={isEager ? "eager" : "lazy"}
-        decoding={isEager ? "sync" : "async"}
-        fetchPriority={isEager ? "high" : "low"}
+        loading={index < 4 ? "eager" : "lazy"}
+        decoding="async"
         referrerPolicy="no-referrer"
-        onLoad={onLoad}
-        className="w-full h-auto max-w-full object-contain block"
+        onLoad={handleLoad}
+        onError={handleError}
+        className={`w-full h-auto max-w-full object-contain block transition-opacity duration-300 ${
+          loaded ? "opacity-100" : "opacity-0"
+        } ${hasError ? "hidden" : ""}`}
       />
     </div>
   );
