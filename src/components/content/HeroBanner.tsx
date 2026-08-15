@@ -31,28 +31,34 @@ export default function HeroBanner({ items }: HeroBannerProps) {
   return (
     <div className="relative w-full h-[360px] sm:h-[420px] md:h-[460px] rounded-3xl overflow-hidden shadow-xl border border-zinc-200 group bg-zinc-900">
       {/* Background Image Carousel */}
-      {bannerItems.map((item, idx) => (
-        <div
-          key={item.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            idx === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-        >
-          <Image
-            src={item.coverUrl}
-            alt={item.title}
-            fill
-            priority={idx === 0}
-            sizes="(max-width: 1280px) 100vw, 1280px"
-            className="object-cover object-top filter brightness-[0.85] scale-105 transition-transform duration-10000 group-hover:scale-110"
-            unoptimized
-            referrerPolicy="no-referrer"
-          />
-          {/* Gradient Overlays for Readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
-        </div>
-      ))}
+      {bannerItems.map((item, idx) => {
+        // Only mount current or adjacent slide to conserve bandwidth
+        const shouldRenderImage = idx === currentIndex || idx === 0 || idx === (currentIndex + 1) % bannerItems.length;
+        if (!shouldRenderImage) return null;
+
+        return (
+          <div
+            key={item.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              idx === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
+          >
+            <Image
+              src={item.coverUrl}
+              alt={item.title}
+              fill
+              priority={idx === 0}
+              fetchPriority={idx === 0 ? "high" : "auto"}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+              className="object-cover object-top filter brightness-[0.85] scale-105 transition-transform duration-10000 group-hover:scale-110"
+              referrerPolicy="no-referrer"
+            />
+            {/* Gradient Overlays for Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
+          </div>
+        );
+      })}
 
       {/* Hero Content Overlay */}
       <div className="relative z-20 h-full flex flex-col justify-end p-6 sm:p-8 md:p-10 max-w-2xl text-white">

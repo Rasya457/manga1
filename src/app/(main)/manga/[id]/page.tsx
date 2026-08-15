@@ -119,8 +119,8 @@ export default function MangaDetailPage({
           alt={detail.title}
           fill
           priority
+          sizes="(max-width: 768px) 100vw, 1200px"
           className="object-cover filter blur-md brightness-[0.7] scale-110"
-          unoptimized
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -131,8 +131,8 @@ export default function MangaDetailPage({
               src={detail.coverUrl}
               alt={detail.title}
               fill
+              sizes="(max-width: 640px) 96px, 128px"
               className="object-cover"
-              unoptimized
               referrerPolicy="no-referrer"
             />
           </div>

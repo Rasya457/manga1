@@ -38,7 +38,6 @@ export default function ContentCard({
           fill
           sizes="(max-width: 640px) 144px, (max-width: 768px) 176px, 192px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          unoptimized
           referrerPolicy="no-referrer"
           loading={priority ? "eager" : "lazy"}
           priority={priority}
