@@ -64,11 +64,10 @@ function MangaPageItem({
   };
 
   const handleError = () => {
-    // If it's the first failure, try auto-retrying once after a brief 500ms pause
     if (retryCount === 0) {
       setTimeout(() => {
         setRetryCount(1);
-      }, 500);
+      }, 400);
     } else {
       setHasError(true);
     }
@@ -83,18 +82,17 @@ function MangaPageItem({
   const imageSrc = retryCount > 0 ? `${url}${url.includes("?") ? "&" : "?"}_r=${retryCount}` : url;
 
   return (
-    <div className="manga-page-item relative w-full flex flex-col items-center justify-center bg-zinc-950 overflow-hidden min-h-[380px] sm:min-h-[540px]">
+    <div className="manga-page-item relative w-full flex flex-col items-center justify-center bg-zinc-950 overflow-hidden min-h-[300px] sm:min-h-[460px]">
       {/* Loading Skeleton */}
       {!loaded && !hasError && (
-        <div className="absolute inset-0 bg-zinc-900/80 flex flex-col items-center justify-center text-zinc-500 gap-2 z-10">
-          <div className="w-8 h-8 border-2 border-zinc-700 border-t-white rounded-full animate-spin" />
-          <span className="text-xs font-semibold text-zinc-400">Memuat Halaman {index + 1}...</span>
+        <div className="absolute inset-0 bg-zinc-900/40 flex flex-col items-center justify-center text-zinc-500 gap-2 z-10">
+          <div className="w-7 h-7 border-2 border-zinc-700 border-t-white rounded-full animate-spin" />
         </div>
       )}
 
       {/* Error Fallback with Retry Button */}
       {hasError && (
-        <div className="py-16 px-6 flex flex-col items-center justify-center text-center gap-3 bg-zinc-900/90 rounded-2xl my-4 border border-zinc-800 max-w-sm z-10">
+        <div className="py-14 px-6 flex flex-col items-center justify-center text-center gap-3 bg-zinc-900/90 rounded-2xl my-4 border border-zinc-800 max-w-sm z-10">
           <p className="text-xs font-bold text-zinc-300">Gagal memuat Halaman {index + 1}</p>
           <button
             type="button"
@@ -106,20 +104,20 @@ function MangaPageItem({
         </div>
       )}
 
-      {/* Actual Manga Page Image */}
+      {/* Actual Manga Page Image — eager loaded for instant fast-scroll rendering */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         key={`${url}-${retryCount}`}
         src={imageSrc}
         alt={`Page ${index + 1}`}
-        loading={index < 4 ? "eager" : "lazy"}
+        loading="eager"
         decoding="async"
         referrerPolicy="no-referrer"
         onLoad={handleLoad}
         onError={handleError}
-        className={`w-full h-auto max-w-full object-contain block transition-opacity duration-300 ${
-          loaded ? "opacity-100" : "opacity-0"
-        } ${hasError ? "hidden" : ""}`}
+        className={`w-full h-auto max-w-full object-contain block ${
+          hasError ? "hidden" : "opacity-100"
+        }`}
       />
     </div>
   );
@@ -185,8 +183,19 @@ export default function InfiniteChapterReader({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialChapterId]);
+  }, [initialChapterId, chapterList, fetchChapterPages]);
+
+  // Proactively preload all chapter images into the browser cache for instant fast-scroll rendering
+  useEffect(() => {
+    if (!loadedChapters.length || typeof window === "undefined") return;
+    loadedChapters.forEach((ch) => {
+      ch.pages.forEach((src) => {
+        const img = new window.Image();
+        img.referrerPolicy = "no-referrer";
+        img.src = src;
+      });
+    });
+  }, [loadedChapters]);
 
   // Jump INSTANTLY to the exact last read page without any smooth scroll animation
   const scrollToInitialPage = useCallback(() => {
