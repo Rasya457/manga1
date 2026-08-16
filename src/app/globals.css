@@ -21,6 +21,19 @@ html.dark {
   color-scheme: dark;
 }
 
+/* Removes the ~300ms tap delay mobile browsers (notably iOS Safari) add on
+   every tap while they wait to see if it turns into a double-tap-to-zoom
+   gesture. Without this, EVERY button/link in the app feels laggy on
+   mobile no matter how fast the underlying navigation actually is. */
+a,
+button,
+[role="button"],
+input,
+textarea,
+select {
+  touch-action: manipulation;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -75,31 +88,52 @@ body {
 
 /* ─── Native Mobile App Page Transitions ─── */
 
-/* Slide in from right (swipe left to go forward) */
-@keyframes slideFromRight {
+/* Incoming page slides fully across (swipe left to go forward) */
+@keyframes slideInFromRight {
   0% {
-    opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(100%) translateZ(0);
   }
   100% {
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) translateZ(0);
   }
 }
 
-/* Slide in from left (swipe right to go back) */
-@keyframes slideFromLeft {
+/* Incoming page slides fully across (swipe right to go back) */
+@keyframes slideInFromLeft {
   0% {
-    opacity: 0;
-    transform: translateX(-100%);
+    transform: translateX(-100%) translateZ(0);
   }
   100% {
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) translateZ(0);
   }
 }
 
-/* Fade up (initial/fallback) */
+/* Outgoing page only travels ~30% with a slight dim — this parallax lag is
+   what makes the pair read as one continuous native push, not two
+   independent animations. */
+@keyframes slideOutToLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
+  }
+  100% {
+    opacity: 0.75;
+    transform: translateX(-30%) translateZ(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  0% {
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
+  }
+  100% {
+    opacity: 0.75;
+    transform: translateX(30%) translateZ(0);
+  }
+}
+
+/* Fade up (initial/fallback, used for non-directional navigation) */
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -111,14 +145,48 @@ body {
   }
 }
 
-.page-slide-from-right {
-  animation: slideFromRight 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+.page-slide-in-from-right {
+  animation: slideInFromRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform;
+  backface-visibility: hidden;
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
+  position: relative;
+  z-index: 2;
+}
+
+.page-slide-in-from-left {
+  animation: slideInFromLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform;
+  backface-visibility: hidden;
+  box-shadow: 12px 0 32px rgba(0, 0, 0, 0.18);
+  position: relative;
+  z-index: 2;
+}
+
+.page-slide-out-to-left {
+  animation: slideOutToLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+.page-slide-out-to-right {
+  animation: slideOutToRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+/* Backwards-compat aliases for the old single-layer class names, in case
+   anything else in the codebase still references them directly. */
+.page-slide-from-right {
+  animation: slideInFromRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform;
 }
 
 .page-slide-from-left {
-  animation: slideFromLeft 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  will-change: transform, opacity;
+  animation: slideInFromLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform;
 }
 
 .page-fade-up {

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -10,6 +10,16 @@ export const metadata: Metadata = {
   title: "Manga Verse — iOS Minimalist Manga App",
   description: "Read Manga, Manhwa, Manhua and Novels with iOS minimalist aesthetics",
   referrer: "no-referrer",
+};
+
+// Without this, mobile browsers assume the page isn't mobile-optimized and
+// render it at desktop width (~980px) scaled down — which both looks wrong
+// and keeps the browser's double-tap-zoom detection (and its tap delay)
+// active. Zoom itself is left enabled (no maximumScale/userScalable lock)
+// so people who need to zoom still can.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
