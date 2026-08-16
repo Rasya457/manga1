@@ -78,7 +78,7 @@ export default function HomePage() {
       ) : (
         <>
           {/* Hero Banner Carousel */}
-          {mangaList.length > 0 && <HeroBanner items={mangaList} />}
+          {mangaListFast.length > 0 && <HeroBanner items={mangaListFast} />}
 
           {/* Continue Reading Section */}
           <ContinueReadingSection />
