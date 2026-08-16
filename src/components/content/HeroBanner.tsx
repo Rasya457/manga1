@@ -52,6 +52,8 @@ export default function HeroBanner({ items }: HeroBannerProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
               className="object-cover object-top filter brightness-[0.85] scale-105 transition-transform duration-10000 group-hover:scale-110"
               referrerPolicy="no-referrer"
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMElEQVQImWNgYGBg+P//PwMDAwMDIyMjAwMDAwMjIyMDAwMDAwMDAwMDAwMDAwMDAAkdBRsklno9AAAAAElFTkSuQmCC"
             />
             {/* Gradient Overlays for Readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />

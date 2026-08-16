@@ -22,8 +22,15 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
-  const { data: mangaList = [], isLoading: catalogLoading } = useSWR(
-    "/api/mangadex/catalog?limit=60&order[updatedAt]=desc",
+  // Fast initial fetch — 10 items, shows immediately
+  const { data: mangaListFast = [], isLoading: fastLoading } = useSWR(
+    "/api/mangadex/catalog?limit=10&order[updatedAt]=desc",
+    fetcher
+  );
+
+  // Background fetch — loads the remaining popular titles
+  const { data: mangaListMore = [] } = useSWR(
+    "/api/mangadex/catalog?limit=50&offset=10&order[updatedAt]=desc",
     fetcher
   );
 
@@ -37,11 +44,12 @@ export default function HomePage() {
     fetcher
   );
 
-  const newChapters = mangaList.slice(0, 10);
-  const popularManga = mangaList.slice(10, 60);
+  const newChapters = mangaListFast;
+  const popularManga = mangaListMore;
 
   // Avoid hydration mismatch by waiting for client mount before switching off skeleton
-  const showSkeleton = !mounted || (catalogLoading && mangaList.length === 0);
+  const catalogLoading = fastLoading;
+  const showSkeleton = !mounted || (catalogLoading && mangaListFast.length === 0);
 
   return (
     <div className="space-y-8 text-zinc-900 dark:text-zinc-100">

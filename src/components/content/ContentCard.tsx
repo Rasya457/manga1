@@ -41,6 +41,8 @@ export default function ContentCard({
           referrerPolicy="no-referrer"
           loading={priority ? "eager" : "lazy"}
           priority={priority}
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMElEQVQImWNgYGBg+P//PwMDAwMDIyMjAwMDAwMjIyMDAwMDAwMDAwMDAwMDAwMDAAkdBRsklno9AAAAAElFTkSuQmCC"
         />
 
         {/* Subtle Gradient Overlay */}

@@ -74,10 +74,36 @@ body {
 }
 
 /* ─── Native Mobile App Page Transitions ─── */
-@keyframes pageSlideIn {
+
+/* Slide in from right (swipe left to go forward) */
+@keyframes slideFromRight {
   0% {
     opacity: 0;
-    transform: translateY(10px) scale(0.995);
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from left (swipe right to go back) */
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade up (initial/fallback) */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.995);
   }
   100% {
     opacity: 1;
@@ -85,7 +111,23 @@ body {
   }
 }
 
+.page-slide-from-right {
+  animation: slideFromRight 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: transform, opacity;
+}
+
+.page-slide-from-left {
+  animation: slideFromLeft 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: transform, opacity;
+}
+
+.page-fade-up {
+  animation: fadeUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Backwards-compat alias */
 .page-enter-animation {
-  animation: pageSlideIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }

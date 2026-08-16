@@ -121,7 +121,7 @@ function VerifyForm() {
     : "email Anda";
 
   return (
-    <div className="fixed inset-0 z-[100] bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 overflow-y-auto flex flex-col justify-between px-4 sm:px-6 py-6 font-sans transition-colors duration-300">
+    <div className="min-h-screen w-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col justify-between px-4 sm:px-6 py-6 font-sans transition-colors duration-300">
       {/* Header */}
       <header className="relative flex items-center justify-between w-full max-w-md mx-auto py-2">
         <button

@@ -14,8 +14,9 @@ const NAV_ITEMS = [
 export default function Navbar() {
   const pathname = usePathname();
 
-  // Hide navbar on chapter reader pages for immersive experience
-  if (pathname.startsWith("/chapter/")) {
+  // Only show navbar on the 4 main tab pages
+  const SHOW_ON = ["/", "/search", "/bookmark", "/profile"];
+  if (!SHOW_ON.includes(pathname)) {
     return null;
   }
 
