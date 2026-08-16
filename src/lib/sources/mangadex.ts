@@ -172,6 +172,10 @@ export async function getMangaList(
     offset: String(offset),
     "includes[]": "cover_art",
     "contentRating[]": "safe",
+    // Only show manga that actually have at least one chapter translated to
+    // Indonesian — otherwise users find a title in the catalog, open it, and
+    // the chapter list is empty.
+    "availableTranslatedLanguage[]": "id",
   });
 
   // Always include suggestive rating so popular series aren't filtered out
@@ -294,7 +298,7 @@ export async function getMangaById(id: string): Promise<MangaDetail> {
 
 export async function getChapterList(mangaId: string): Promise<ChapterItem[]> {
   const params = new URLSearchParams({
-    "translatedLanguage[]": "en",
+    "translatedLanguage[]": "id",
     "order[chapter]": "asc",
     limit: "100",
     "includes[]": "scanlation_group",

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "@/lib/firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase/config";
 import {
   signInWithGoogle,
   loginWithEmail,
@@ -63,10 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // 2. Listen to real-time Firebase Auth state changes if auth is initialized
-    let unsubscribe: any = () => {};
+    let unsubscribe: () => void = () => {};
     if (auth) {
       try {
-        const { onAuthStateChanged } = require("firebase/auth");
         unsubscribe = onAuthStateChanged(auth, (fbUser: any) => {
           if (fbUser) {
             const profile = toProfile(fbUser);
@@ -94,9 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, pass: string) => {
-    // No fallback here on purpose: if Firebase auth fails, the error
-    // must propagate so the login form can show a real error message
-    // instead of pretending the user is signed in.
     const fbUser = await loginWithEmail(email, pass);
     const profile = toProfile(fbUser);
     setUser(profile);
@@ -113,8 +111,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(profile));
     }
     try {
-      const { doc, setDoc } = require("firebase/firestore");
-      const { db } = require("@/lib/firebase/config");
       if (db && fbUser?.uid) {
         await setDoc(doc(db, "users", fbUser.uid), { emailVerified: false, email }, { merge: true });
       }
@@ -132,8 +128,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(profile));
       }
       try {
-        const { doc, setDoc } = require("firebase/firestore");
-        const { db } = require("@/lib/firebase/config");
         if (db && fbUser?.uid) {
           await setDoc(doc(db, "users", fbUser.uid), { emailVerified: true }, { merge: true });
         }

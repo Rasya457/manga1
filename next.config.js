@@ -17,28 +17,12 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24, // 24 hours
   },
 
-  // Tree-shake and optimize heavy packages to eliminate unused JavaScript
   experimental: {
-    optimizePackageImports: [
-      "firebase/app",
-      "firebase/auth",
-      "firebase/firestore",
-      "@vercel/speed-insights",
-    ],
+    optimizePackageImports: ["@vercel/speed-insights"],
   },
 
   async headers() {
     return [
-      // ─── Cache Static Assets ────────────────────────────────────────────────
-      {
-        source: "/_next/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
       // ─── Cache MangaDex API Responses ───────────────────────────────────────
       {
         source: "/api/mangadex/:path*",

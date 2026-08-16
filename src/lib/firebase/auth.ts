@@ -1,12 +1,17 @@
 // src/lib/firebase/auth.ts
+import {
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth, googleProvider } from "./config";
 
 export async function signInWithGoogle() {
-  if (!auth) {
-    throw new Error("Firebase SDK is not installed in node_modules yet. Please run: npm i");
+  if (!auth || !googleProvider) {
+    throw new Error("Firebase Auth is not initialized. Please check your environment variables.");
   }
   try {
-    const { signInWithPopup } = require("firebase/auth");
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   } catch (error: any) {
@@ -17,10 +22,9 @@ export async function signInWithGoogle() {
 
 export async function loginWithEmail(email: string, pass: string) {
   if (!auth) {
-    throw new Error("Firebase SDK is not installed in node_modules yet. Please run: npm i");
+    throw new Error("Firebase Auth is not initialized. Please check your environment variables.");
   }
   try {
-    const { signInWithEmailAndPassword } = require("firebase/auth");
     const result = await signInWithEmailAndPassword(auth, email, pass);
     return result.user;
   } catch (error: any) {
@@ -31,10 +35,9 @@ export async function loginWithEmail(email: string, pass: string) {
 
 export async function registerWithEmail(email: string, pass: string) {
   if (!auth) {
-    throw new Error("Firebase SDK is not installed in node_modules yet. Please run: npm i");
+    throw new Error("Firebase Auth is not initialized. Please check your environment variables.");
   }
   try {
-    const { createUserWithEmailAndPassword } = require("firebase/auth");
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     return result.user;
   } catch (error: any) {
@@ -46,7 +49,6 @@ export async function registerWithEmail(email: string, pass: string) {
 export async function logoutFirebase() {
   if (!auth) return;
   try {
-    const { signOut } = require("firebase/auth");
     await signOut(auth);
   } catch (error: any) {
     console.error("Firebase SignOut Error:", error);

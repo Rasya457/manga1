@@ -10,22 +10,24 @@ export const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-let app: any = null;
-let auth: any = null;
-let db: any = null;
-let googleProvider: any = null;
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
+
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let googleProvider: GoogleAuthProvider | null = null;
 
 try {
-  const { initializeApp, getApps, getApp } = require("firebase/app");
-  const { getAuth, GoogleAuthProvider } = require("firebase/auth");
-  const { getFirestore } = require("firebase/firestore");
-
-  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  googleProvider = new GoogleAuthProvider();
+  if (typeof window !== "undefined" || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+    app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    googleProvider = new GoogleAuthProvider();
+  }
 } catch (e) {
-  // Graceful fallback when firebase is still installing in node_modules
+  console.warn("Firebase initialization skipped or failed:", e);
 }
 
 export { app, auth, db, googleProvider };

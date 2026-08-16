@@ -28,7 +28,7 @@ function isFirebaseConfigured(): boolean {
 }
 
 export async function setBookmark(uid: string, data: BookmarkData) {
-  if (!isFirebaseConfigured()) return;
+  if (!db || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) return;
   try {
     const docRef = doc(db, "users", uid, "bookmarks", data.contentId);
     await setDoc(docRef, {
@@ -41,7 +41,7 @@ export async function setBookmark(uid: string, data: BookmarkData) {
 }
 
 export async function removeBookmark(uid: string, contentId: string) {
-  if (!isFirebaseConfigured()) return;
+  if (!db || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) return;
   try {
     const docRef = doc(db, "users", uid, "bookmarks", contentId);
     await deleteDoc(docRef);
@@ -51,7 +51,7 @@ export async function removeBookmark(uid: string, contentId: string) {
 }
 
 export async function getBookmark(uid: string, contentId: string) {
-  if (!isFirebaseConfigured()) return null;
+  if (!db || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) return null;
   try {
     const docRef = doc(db, "users", uid, "bookmarks", contentId);
     const snap = await getDoc(docRef);
@@ -63,7 +63,7 @@ export async function getBookmark(uid: string, contentId: string) {
 }
 
 export async function setHistory(uid: string, data: HistoryData) {
-  if (!isFirebaseConfigured()) return;
+  if (!db || !process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) return;
   try {
     const docRef = doc(db, "users", uid, "history", data.contentId);
     await setDoc(docRef, {
