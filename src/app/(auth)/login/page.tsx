@@ -220,7 +220,7 @@ function LoginForm() {
       </main>
 
       <footer className="w-full max-w-md mx-auto py-2 text-center text-[11px] text-zinc-400 dark:text-zinc-500">
-        &copy; {new Date().getFullYear()} Manga Verse. All rights reserved.
+        &copy; {new Date().getFullYear()} Mangafy. All rights reserved.
       </footer>
     </div>
   );

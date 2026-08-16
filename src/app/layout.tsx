@@ -7,7 +7,7 @@ import SWRProviderWrapper from "@/components/providers/SWRProviderWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "Manga Verse — iOS Minimalist Manga App",
+  title: "Mangafy — iOS Minimalist Manga App",
   description: "Read Manga, Manhwa, Manhua and Novels with iOS minimalist aesthetics",
   referrer: "no-referrer",
 };

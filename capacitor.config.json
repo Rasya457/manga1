@@ -1,6 +1,6 @@
 {
-  "appId": "com.mangaverse.app",
-  "appName": "Manga Verse",
+  "appId": "com.mangafy.app",
+  "appName": "Mangafy",
   "webDir": "public",
   "server": {
     "url": "https://manga1.vercel.app",

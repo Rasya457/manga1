@@ -423,14 +423,14 @@ function AboutPage({ onBack }: { onBack: () => void }) {
             <span className="text-white dark:text-zinc-900 text-2xl font-black">M</span>
           </div>
           <div>
-            <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-100">Manga Verse</h3>
+            <h3 className="text-base font-extrabold text-zinc-900 dark:text-zinc-100">Mangafy</h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">Version 1.0.0</p>
           </div>
         </div>
 
         <div className="border-t border-zinc-100 dark:border-zinc-800 pt-4 space-y-2">
           {[
-            ["Developer", "Manga Verse Team"],
+            ["Developer", "Mangafy Team"],
             ["Platform", "Next.js 16 (App Router)"],
             ["Data Source", "MangaDex API"],
             ["License", "Private / All Rights Reserved"],

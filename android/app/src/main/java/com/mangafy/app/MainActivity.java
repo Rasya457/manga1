@@ -1,4 +1,4 @@
-package com.mangaverse.app;
+package com.mangafy.app;
 
 import com.getcapacitor.BridgeActivity;
 
