@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/Icons";
 import { useBookmark } from "@/hooks/useBookmark";
 import { useReadingHistory } from "@/hooks/useReadingHistory";
+import { useWakeLock } from "@/hooks/useWakeLock";
 import ChapterDrawer from "./ChapterDrawer";
 
 interface ChapterRef {
@@ -132,6 +133,9 @@ export default function InfiniteChapterReader({
   fetchChapterPages = defaultFetchChapterPages,
   initialPage = 1,
 }: InfiniteChapterReaderProps) {
+  // Keep screen awake while user is reading manga
+  useWakeLock(true);
+
   const router = useRouter();
   const { isBookmarked, toggleBookmark } = useBookmark();
   const { updateHistory } = useReadingHistory();

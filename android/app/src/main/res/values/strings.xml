@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Manga Verse</string>
+    <string name="title_activity_main">Manga Verse</string>
+    <string name="package_name">com.mangaverse.app</string>
+    <string name="custom_url_scheme">com.mangaverse.app</string>
+</resources>

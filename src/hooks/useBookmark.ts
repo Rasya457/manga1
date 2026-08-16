@@ -7,6 +7,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { setBookmark, removeBookmark as removeBookmarkDoc, ContentType } from "@/lib/firebase/firestore";
 import { useAuthContext } from "@/context/AuthContext";
+import { triggerHaptic } from "@/lib/haptics";
 
 export interface BookmarkInput {
   contentId: string; // mangaId
@@ -81,6 +82,7 @@ export function useBookmark() {
 
   const removeBookmark = useCallback(
     async (contentId: string) => {
+      triggerHaptic("light");
       const updated = bookmarks.filter((b) => b.contentId !== contentId);
       saveLocal(updated);
       if (user?.uid && db) {
@@ -92,6 +94,7 @@ export function useBookmark() {
 
   const addBookmark = useCallback(
     async (data: BookmarkInput) => {
+      triggerHaptic("medium");
       const updated = [data, ...bookmarks.filter((b) => b.contentId !== data.contentId)];
       saveLocal(updated);
       if (user?.uid && db) {

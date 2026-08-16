@@ -4,6 +4,8 @@ import React, { useRef, useEffect, useLayoutEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/ui/Navbar";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { useNativeBackButton } from "@/hooks/useNativeBackButton";
+import { useStatusBar } from "@/hooks/useStatusBar";
 import {
   MAIN_TABS,
   type SlideDirection,
@@ -22,6 +24,10 @@ const SLIDE_TRANSITION_MS = 340;
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+
+  // Native Android hardware back button and Edge-to-edge status bar hooks
+  useNativeBackButton();
+  useStatusBar();
 
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -136,16 +142,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const incomingClass =
     incomingDirection === "left"
-      ? "page-slide-in-from-right"
+      ? "page-push-incoming" // forward: new page slides in fully, on top
       : incomingDirection === "right"
-      ? "page-slide-in-from-left"
+      ? "page-pop-incoming" // back: revealed page slides in partially, underneath
       : "page-fade-up";
 
   const outgoingClass =
     outgoing?.direction === "left"
-      ? "page-slide-out-to-left"
+      ? "page-push-outgoing" // forward: old page recedes partially, underneath, dimmed
       : outgoing?.direction === "right"
-      ? "page-slide-out-to-right"
+      ? "page-pop-outgoing" // back: current page exits fully, on top
       : "";
 
   // Shared so the absolutely-positioned outgoing layer lines up exactly
@@ -165,14 +171,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           {outgoing && (
             <div
               key={`outgoing-${outgoing.snapshot.pathname}`}
-              className={`absolute inset-0 ${pagePadding} ${outgoingClass}`}
+              className={`absolute inset-0 bg-zinc-100 dark:bg-zinc-950 ${pagePadding} ${outgoingClass}`}
               aria-hidden="true"
               style={{ pointerEvents: "none" }}
             >
               {outgoing.snapshot.children}
             </div>
           )}
-          <div key={`${pathname}-${animKey}`} className={`${pagePadding} ${incomingClass} w-full`}>
+          <div key={`${pathname}-${animKey}`} className={`bg-zinc-100 dark:bg-zinc-950 ${pagePadding} ${incomingClass} w-full`}>
             {children}
           </div>
         </main>

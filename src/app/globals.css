@@ -21,10 +21,30 @@ html.dark {
   color-scheme: dark;
 }
 
-/* Removes the ~300ms tap delay mobile browsers (notably iOS Safari) add on
-   every tap while they wait to see if it turns into a double-tap-to-zoom
-   gesture. Without this, EVERY button/link in the app feels laggy on
-   mobile no matter how fast the underlying navigation actually is. */
+/* ─── Native Mobile App Experience Resets ─── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent accidental blue selection box on images and buttons when swiping */
+img,
+button,
+a,
+nav,
+[role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Prevent rubber-band bounce / browser pull-to-refresh clash */
+html,
+body {
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+}
+
+/* Removes the ~300ms tap delay mobile browsers add on taps */
 a,
 button,
 [role="button"],
@@ -42,6 +62,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Dark mode body override */
@@ -88,8 +110,10 @@ body {
 
 /* ─── Native Mobile App Page Transitions ─── */
 
-/* Incoming page slides fully across (swipe left to go forward) */
-@keyframes slideInFromRight {
+/* ===== PUSH (forward navigation, e.g. swipe left / tap a later tab) ===== */
+
+/* New page enters fully from the right, on top */
+@keyframes pushIncoming {
   0% {
     transform: translateX(100%) translateZ(0);
   }
@@ -98,20 +122,8 @@ body {
   }
 }
 
-/* Incoming page slides fully across (swipe right to go back) */
-@keyframes slideInFromLeft {
-  0% {
-    transform: translateX(-100%) translateZ(0);
-  }
-  100% {
-    transform: translateX(0) translateZ(0);
-  }
-}
-
-/* Outgoing page only travels ~30% with a slight dim — this parallax lag is
-   what makes the pair read as one continuous native push, not two
-   independent animations. */
-@keyframes slideOutToLeft {
+/* Old page recedes underneath with parallax + a slight dim */
+@keyframes pushOutgoing {
   0% {
     opacity: 1;
     transform: translateX(0) translateZ(0);
@@ -122,14 +134,28 @@ body {
   }
 }
 
-@keyframes slideOutToRight {
+/* ===== POP (back navigation, e.g. swipe right / tap an earlier tab) ===== */
+
+/* Current page exits fully to the right, on top — the one being dismissed */
+@keyframes popOutgoing {
   0% {
-    opacity: 1;
     transform: translateX(0) translateZ(0);
   }
   100% {
+    transform: translateX(100%) translateZ(0);
+  }
+}
+
+/* Previous page is revealed underneath with parallax, dim fading out as it
+   becomes the foreground */
+@keyframes popIncoming {
+  0% {
     opacity: 0.75;
-    transform: translateX(30%) translateZ(0);
+    transform: translateX(-30%) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
   }
 }
 
@@ -145,8 +171,8 @@ body {
   }
 }
 
-.page-slide-in-from-right {
-  animation: slideInFromRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+.page-push-incoming {
+  animation: pushIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform;
   backface-visibility: hidden;
   box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
@@ -154,39 +180,40 @@ body {
   z-index: 2;
 }
 
-.page-slide-in-from-left {
-  animation: slideInFromLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+.page-push-outgoing {
+  animation: pushOutgoing 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+.page-pop-incoming {
+  animation: popIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  z-index: 1;
+}
+
+.page-pop-outgoing {
+  animation: popOutgoing 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform;
   backface-visibility: hidden;
-  box-shadow: 12px 0 32px rgba(0, 0, 0, 0.18);
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
   position: relative;
   z-index: 2;
 }
 
-.page-slide-out-to-left {
-  animation: slideOutToLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  z-index: 1;
-}
-
-.page-slide-out-to-right {
-  animation: slideOutToRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  z-index: 1;
-}
-
-/* Backwards-compat aliases for the old single-layer class names, in case
-   anything else in the codebase still references them directly. */
-.page-slide-from-right {
-  animation: slideInFromRight 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+/* Backwards-compat aliases in case anything else references the old names */
+.page-slide-from-right,
+.page-slide-in-from-right {
+  animation: pushIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform;
 }
 
-.page-slide-from-left {
-  animation: slideInFromLeft 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform;
+.page-slide-from-left,
+.page-slide-in-from-left {
+  animation: popIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .page-fade-up {

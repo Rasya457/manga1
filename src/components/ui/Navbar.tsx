@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IconHome, IconSearch, IconBookmark, IconUser } from "./Icons";
 import { setPendingDirectionForTabChange } from "@/lib/pageTransition";
+import { triggerHaptic } from "@/lib/haptics";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: IconHome },
@@ -42,7 +43,10 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => setPendingDirectionForTabChange(pathname, item.href)}
+              onClick={() => {
+                triggerHaptic("selection");
+                setPendingDirectionForTabChange(pathname, item.href);
+              }}
               className={`relative flex flex-col sm:flex-row items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 select-none ${
                 isActive
                   ? "text-white font-bold"
