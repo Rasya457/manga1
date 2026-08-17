@@ -49,19 +49,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(email, password);
-      const currentUser = auth?.currentUser;
-      if (currentUser?.uid) {
-        try {
-          await fetch("/api/auth/send-code", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uid: currentUser.uid, email: email.trim() }),
-          });
-        } catch (e) {
-          console.error("Failed to trigger OTP email send", e);
-        }
-      }
-      router.push("/verify");
+      router.replace("/");
     } catch (err: any) {
       setError(getAuthErrorMessage(err));
     } finally {

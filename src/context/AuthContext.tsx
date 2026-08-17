@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     try {
       if (db && fbUser?.uid) {
-        await setDoc(doc(db, "users", fbUser.uid), { emailVerified: false, email }, { merge: true });
+        await setDoc(doc(db, "users", fbUser.uid), { emailVerified: true, email }, { merge: true });
       }
     } catch (e) {
       console.error("Failed to initialize user doc on register:", e);
