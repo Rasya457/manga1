@@ -40,16 +40,21 @@ export default function ProfilePage() {
   const [customName, setCustomName] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.uid) {
-      syncUserProfileWithFirestore(user.uid).then(() => {
-        setBannerUrl(getSavedBanner(user?.uid));
-        setAvatarUrl(getSavedAvatar(user?.uid, user?.photoURL));
-        setCustomName(getSavedDisplayName(user?.uid, user?.displayName, user?.email));
-      });
-    } else {
+    const refreshProfile = () => {
       setBannerUrl(getSavedBanner(user?.uid));
       setAvatarUrl(getSavedAvatar(user?.uid, user?.photoURL));
       setCustomName(getSavedDisplayName(user?.uid, user?.displayName, user?.email));
+    };
+
+    refreshProfile();
+
+    if (user?.uid) {
+      syncUserProfileWithFirestore(user.uid).then(refreshProfile);
+    }
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("manga_user_profile_updated", refreshProfile);
+      return () => window.removeEventListener("manga_user_profile_updated", refreshProfile);
     }
   }, [user]);
 

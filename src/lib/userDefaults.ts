@@ -69,6 +69,9 @@ export async function saveUserAvatar(uid: string, avatarUrl: string | null) {
     } else {
       localStorage.removeItem(`manga_app_user_avatar_${uid}`);
     }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("manga_user_profile_updated"));
+    }
   } catch (e) {}
 
   if (db && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
@@ -86,6 +89,9 @@ export async function saveUserBanner(uid: string, bannerUrl: string | null) {
     } else {
       localStorage.removeItem(`manga_app_user_banner_${uid}`);
     }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("manga_user_profile_updated"));
+    }
   } catch (e) {}
 
   if (db && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
@@ -102,6 +108,9 @@ export async function saveUserName(uid: string, displayName: string) {
       localStorage.setItem(`manga_app_user_name_${uid}`, displayName.trim());
     } else {
       localStorage.removeItem(`manga_app_user_name_${uid}`);
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("manga_user_profile_updated"));
     }
   } catch (e) {}
 

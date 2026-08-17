@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/Icons";
 import { useAuthContext } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { triggerHaptic } from "@/lib/haptics";
 
 // ─── Icons specific to settings ───────────────────────────────────────────────
 function IconLock({ className = "w-5 h-5" }: { className?: string }) {
@@ -274,6 +275,9 @@ function ProfileDetailsPage({ onBack }: { onBack: () => void }) {
         if (result && userKey) {
           setAvatarUrl(result);
           saveUserAvatar(userKey, result);
+          triggerHaptic("light");
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 2000);
         }
       };
       reader.readAsDataURL(file);
@@ -289,6 +293,9 @@ function ProfileDetailsPage({ onBack }: { onBack: () => void }) {
         if (result && userKey) {
           setBannerUrl(result);
           saveUserBanner(userKey, result);
+          triggerHaptic("light");
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 2000);
         }
       };
       reader.readAsDataURL(file);
@@ -300,7 +307,7 @@ function ProfileDetailsPage({ onBack }: { onBack: () => void }) {
     if (userKey && displayName.trim()) {
       saveUserName(userKey, displayName);
     }
-
+    triggerHaptic("medium");
     setSuccess(true);
     setTimeout(() => setSuccess(false), 2500);
   };
@@ -308,11 +315,13 @@ function ProfileDetailsPage({ onBack }: { onBack: () => void }) {
   const handleRemoveBanner = () => {
     setBannerUrl(null);
     if (userKey) saveUserBanner(userKey, null);
+    triggerHaptic("light");
   };
 
   const handleRemoveAvatar = () => {
     setAvatarUrl(null);
     if (userKey) saveUserAvatar(userKey, null);
+    triggerHaptic("light");
   };
 
   const finalAvatar = avatarUrl || user?.photoURL || null;
