@@ -34,7 +34,7 @@ export default function RootLayout({
         {/* Preconnect to key image CDNs to reduce LCP */}
         <link rel="preconnect" href="https://uploads.mangadex.org" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://uploads.mangadex.org" />
-        <link rel="preconnect" href="https://manga1.vercel.app" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://manga1-tau.vercel.app" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen antialiased pb-24 md:pb-28">
         <SWRProviderWrapper>

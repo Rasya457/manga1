@@ -3,7 +3,7 @@
   "appName": "Mangafy",
   "webDir": "public",
   "server": {
-    "url": "https://manga1.vercel.app",
+    "url": "https://manga1-tau.vercel.app",
     "cleartext": true
   },
   "android": {
