@@ -108,125 +108,16 @@ body {
   background: #3f3f46;
 }
 
-/* ─── Native Mobile App Page Transitions ─── */
-
-/* ===== PUSH (forward navigation, e.g. swipe left / tap a later tab) ===== */
-
-/* New page enters fully from the right, on top */
-@keyframes pushIncoming {
-  0% {
-    transform: translateX(100%) translateZ(0);
-  }
-  100% {
-    transform: translateX(0) translateZ(0);
-  }
-}
-
-/* Old page recedes underneath with parallax + a slight dim */
-@keyframes pushOutgoing {
-  0% {
-    opacity: 1;
-    transform: translateX(0) translateZ(0);
-  }
-  100% {
-    opacity: 0.75;
-    transform: translateX(-30%) translateZ(0);
-  }
-}
-
-/* ===== POP (back navigation, e.g. swipe right / tap an earlier tab) ===== */
-
-/* Current page exits fully to the right, on top — the one being dismissed */
-@keyframes popOutgoing {
-  0% {
-    transform: translateX(0) translateZ(0);
-  }
-  100% {
-    transform: translateX(100%) translateZ(0);
-  }
-}
-
-/* Previous page is revealed underneath with parallax, dim fading out as it
-   becomes the foreground */
-@keyframes popIncoming {
-  0% {
-    opacity: 0.75;
-    transform: translateX(-30%) translateZ(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) translateZ(0);
-  }
-}
-
-/* Fade up (initial/fallback, used for non-directional navigation) */
-@keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(12px) scale(0.995);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.page-push-incoming {
-  animation: pushIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform;
-  backface-visibility: hidden;
-  box-shadow: -8px 0 16px rgba(0, 0, 0, 0.18);
-  position: relative;
-  z-index: 2;
-  contain: layout paint;
-}
-
-.page-push-outgoing {
-  animation: pushOutgoing 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  z-index: 1;
-  contain: layout paint;
-}
-
-.page-pop-incoming {
-  animation: popIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  z-index: 1;
-  contain: layout paint;
-}
-
-.page-pop-outgoing {
-  animation: popOutgoing 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform;
-  backface-visibility: hidden;
-  box-shadow: -8px 0 16px rgba(0, 0, 0, 0.18);
-  position: relative;
-  z-index: 2;
-  contain: layout paint;
-}
-
-/* Backwards-compat aliases in case anything else references the old names */
+/* ─── Fast Instant Page Navigation ─── */
+.page-fade-up,
+.page-enter-animation,
 .page-slide-from-right,
-.page-slide-in-from-right {
-  animation: pushIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform;
-}
-
 .page-slide-from-left,
-.page-slide-in-from-left {
-  animation: popIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  will-change: transform, opacity;
-}
-
-.page-fade-up {
-  animation: fadeUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
-}
-
-/* Backwards-compat alias */
-.page-enter-animation {
-  animation: fadeUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
+.page-slide-in-from-right,
+.page-slide-in-from-left,
+.page-push-incoming,
+.page-push-outgoing,
+.page-pop-incoming,
+.page-pop-outgoing {
+  animation: none !important;
 }
