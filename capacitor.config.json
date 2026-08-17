@@ -9,5 +9,11 @@
   "android": {
     "allowMixedContent": true,
     "backgroundColor": "#09090b"
+  },
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["google.com"]
+    }
   }
 }
