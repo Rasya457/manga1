@@ -175,9 +175,10 @@ body {
   animation: pushIncoming 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform;
   backface-visibility: hidden;
-  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
+  box-shadow: -8px 0 16px rgba(0, 0, 0, 0.18);
   position: relative;
   z-index: 2;
+  contain: layout paint;
 }
 
 .page-push-outgoing {
@@ -185,6 +186,7 @@ body {
   will-change: transform, opacity;
   backface-visibility: hidden;
   z-index: 1;
+  contain: layout paint;
 }
 
 .page-pop-incoming {
@@ -192,15 +194,17 @@ body {
   will-change: transform, opacity;
   backface-visibility: hidden;
   z-index: 1;
+  contain: layout paint;
 }
 
 .page-pop-outgoing {
   animation: popOutgoing 0.34s cubic-bezier(0.32, 0.72, 0, 1) forwards;
   will-change: transform;
   backface-visibility: hidden;
-  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
+  box-shadow: -8px 0 16px rgba(0, 0, 0, 0.18);
   position: relative;
   z-index: 2;
+  contain: layout paint;
 }
 
 /* Backwards-compat aliases in case anything else references the old names */
